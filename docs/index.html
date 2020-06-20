@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Instagram Line Break Tool</title>
+    <meta name="description" content="Add line break to your Instagram caption" />
+    <meta name="keywords" content="caption,instagram,generator,text" />
+    <meta name="author" content="Yufi Eko Firmansyah" />
+
+
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="icon" href="favicon.ico">
+
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        
+        textarea {
+            resize: none;
+        }
+        /* Remove IE clear cross */
+        
+        input[type=text]::-ms-clear {
+            display: none;
+        }
+        /* Chrome, Safari, Edge, Opera */
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        /* Firefox */
+        
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+        
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <!-- Custom styles for this template -->
+    <link href="css/floating-labels.css" rel="stylesheet">
+</head>
+
+<body>
+    <form class="form-signin">
+        <div class="text-center mb-4">
+            <img class="mb-4" src="apple-touch-icon.png" alt="" width="72" height="72">
+            <h1 class="h3 mb-3 font-weight-normal">Instagram Line Break</h1>
+            <p>Generate caption with line break for your Instagram, just type or paste your <code>caption</code> and you will get your new caption with line break.</p>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-6">
+                    <label for="text">Caption</label>
+                </div>
+                <div class="col-6 text-right">
+                    <span class="text-counter">0</span>/2200
+                </div>
+            </div>
+            <textarea id="text" class="form-control" placeholder="Your text here" rows="10" maxlength="2200"></textarea>
+        </div>
+
+        <div class="form-group">
+            <div class="row">
+                <div class="col-6">
+                    <label for="text">Updated Caption</label>
+                </div>
+                <div class="col-6 text-right">
+                    <button class="btn btn-sm btn-secondary btn-copy">Copy</button>
+                </div>
+            </div>
+            <textarea class="form-control no-resize" id="generated" placeholder="Your link will be here" readonly></textarea>
+        </div>
+
+        <button class="btn btn-lg btn-primary btn-block" id="btn-generate" type="button">Generate</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script>
+        function copyToClipboard(element) {
+            $(element).select();
+            document.execCommand('copy');
+        }
+
+        var button = $('#btn-generate');
+        var buttonCopy = $('.btn-copy');
+        var textElem = $('#text');
+        var textGeneratedElem = $('#generated');
+
+        textElem.on('keyup', function(e) {
+            $('.text-counter').text(textElem.val().length)
+        });
+
+        button.on('click', function(e) {
+            var text = textElem.val();
+
+            if (text) {
+                text = text.replace(/\u2800/g, '');
+                text = text.replace(/\n/g, "\u2800\n");
+                $(this).val(text);
+
+                localStorage.setItem('text', text)
+
+                if (text && text.match(/\n/g) && text.match(/\u2800\n/g) && text.match(/\n/g).length === text.match(/\u2800\n/g).length) {
+                    textGeneratedElem.focus();
+                }
+
+                textGeneratedElem.text(text);
+            }
+        });
+
+        textElem.val(localStorage.getItem('text')).trigger('keyup');
+
+        buttonCopy.on('click', function(e) {
+            e.preventDefault();
+            buttonCopy.addClass('copying');
+            copyToClipboard('#generated');
+
+            setTimeout(() => {
+                buttonCopy.removeClass('copying');
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>
